@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Referrer test page</title>
+<!-- Start Wingify Async V3.0 SmartCode -->
+<link rel="preconnect" href="https://edge.wingify.net"/>
+<script type="text/javascript">
+const params = new URLSearchParams(window.location.search);
+ const accId = parseInt(params.get("id"));
+ const accountId = accId || 1247268;
+ console.log("Account-Id ->", accountId);
+window._wingify_code || (function() {        
+    var account_id =  accountId,
+        version = 3.0,
+        settings_tolerance = 2000,
+        hide_element = 'body',
+        hide_element_style =
+        'opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important;transition:none !important';
+    /* DO NOT EDIT BELOW THIS LINE */
+    var n=window,i=document;if(-1<i.URL.indexOf('__wingify_disable__')||n._wingify_code)return;var t=!1,r=i.currentScript,e={sT:settings_tolerance,hES:hide_element_style,hE:hide_element};try{e=Object.assign(e,JSON.parse(localStorage.getItem('_wingify_'+account_id+'_config')))}catch(e){}var code={script:r,nonce:r.nonce,settings_tolerance:function(){return e.sT},hide_element:function(){return performance.getEntriesByName('first-contentful-paint')[0]?'':e.hE},hide_element_style:function(){return'{'+e.hES+'}'},getVersion:function(){return version},finish:function(){var e;!t&&(t=!0,e=i.getElementById('_vis_opt_path_hides'))&&e.parentNode.removeChild(e)},finished:function(){return t},addScript:function(e){var t=i.createElement('script');t.src=e,r.nonce&&t.setAttribute('nonce',r.nonce),t.fetchPriority='high',i.head.appendChild(t)},init:function(){n._settings_timer=setTimeout(function(){code.finish()},this.settings_tolerance());var e,t=this.hide_element();t&&((e=i.createElement('style')).id='_vis_opt_path_hides',r.nonce&&e.setAttribute('nonce',r.nonce),e.textContent=t+this.hide_element_style(),i.head.appendChild(e)),this.addScript('https://edge.wingify.net/cloud-run-test/final/'+account_id+'.js')}};n._wingify_code=code;code.init();})();
+</script> 
+<!--End Wingify Async SmartCode -->
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--tx:#1b1f24;--bd:#d5d9df;--ac:#0b5cad}
+@media(prefers-color-scheme:dark){:root{--bg:#14171a;--card:#1d2126;--tx:#e8eaed;--bd:#3a4048;--ac:#6cb2ff}}
+body{font:15px/1.5 system-ui,sans-serif;max-width:760px;margin:0 auto;padding:16px;color:var(--tx);background:var(--bg)}
+button,a.btn{display:inline-block;margin:4px 6px 4px 0;padding:7px 12px;border:1px solid var(--ac);border-radius:5px;background:none;color:var(--ac);cursor:pointer;font:inherit;text-decoration:none}
+.card{border:1px solid var(--bd);border-radius:6px;padding:4px 16px 14px;margin:12px 0;background:var(--card)}
+table{border-collapse:collapse;width:100%;background:var(--card);font-size:13px}
+th,td{border:1px solid var(--bd);padding:4px 8px;text-align:left;word-break:break-all}
+#ins th{width:210px}code{background:#8883;padding:1px 5px;border-radius:4px}
+</style></head><body>
+<div id="app"></div>
+<script>
+const P=new URLSearchParams(location.search),page=P.get('page'),$=s=>document.querySelector(s),
+e=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])),A=$('#app');
+
+if(!page){ /* ---------- LAUNCHER (no ?page=) ---------- */
+ const src=P.get('src')||'newsletter',me=location.href;
+ A.innerHTML=`<h1>Step 1: Launcher</h1>
+ <div class="card"><p>This page is the <b>source</b>. The URL below becomes the referrer.</p>
+ <p><code id="me"></code></p>
+ <p>To use another keyword, open this site as <code>/?src=anything</code>.</p>
+ <button data-m="unsafe-url">Open test page: full referrer</button>
+ <button data-m="origin">Open test page: origin only</button>
+ <button data-m="no-referrer">Open test page: no referrer</button>
+ <button data-m="new">Open in new tab: full referrer</button>
+ <button data-m="js">Open with JS redirect</button></div>`;
+ $('#me').textContent=me;
+ const dest=location.pathname+'?page=home&src='+encodeURIComponent(src);
+ A.onclick=ev=>{const m=ev.target.dataset.m;if(!m)return;
+  if(m==='js'){location.href=dest;return}
+  const a=document.createElement('a');a.href=dest;a.referrerPolicy=m==='new'?'unsafe-url':m;
+  if(m==='new')a.target='_blank';A.append(a);a.click();a.remove()};
+}else{ /* ---------- SPA TEST PAGE (?page=...) ---------- */
+ const R0=document.referrer,RT=['home','pricing','checkout'];let n=0;
+ A.innerHTML=`<h1>Step 2: Test SPA</h1>
+ <a class="btn" href="${location.pathname}?src=${encodeURIComponent(P.get('src')||'newsletter')}">Back to launcher</a>
+ <nav><button data-r="home">Home</button><button data-r="pricing">Pricing</button><button data-r="checkout">Checkout</button>
+ <button id="bk">Back</button><button id="fw">Forward</button><button id="rapid">Rapid x5</button><button id="rl">Reload</button></nav>
+ <div class="card" id="view"></div>
+ <h3>What the page sees</h3><table id="ins"></table>
+ <h3>Route changes (newest first)</h3><table id="log"><tr><th>#</th><th>Time</th><th>How</th><th>URL</th></tr></table>`;
+ const cur=()=>new URLSearchParams(location.search).get('page')||'home',
+ url=r=>{const u=new URL(location.href);u.searchParams.set('page',r);return u.href};
+ function ins(){const f=document.referrer;let ty='EMPTY (no referrer)';
+  try{if(f){const u=new URL(f);ty=(u.pathname==='/'&&!u.search)?'ORIGIN ONLY (no path)':'FULL URL'}}catch(x){}
+  const v=!!(window._vwo_code||window.VWO||window._vwo_exp||window._vwo_settings);
+  $('#ins').innerHTML=[['Current route',cur()],['Referrer when page loaded',R0||'(empty)'],
+  ['Referrer type',ty],['Referrer changed since load?',f===R0?'No (expected in SPA)':'YES'],
+  ['VWO SmartCode found',v?'Yes':'No']].map(r=>`<tr><th>${r[0]}</th><td>${e(r[1])}</td></tr>`).join('')}
+ function show(how){const r=cur();
+  $('#view').innerHTML=`<h2 id="route-title">Route: ${r}</h2><p>This is the <b>${r}</b> screen. Change this button in your VWO variation:</p><button id="cta">CTA on ${r}</button>`;
+  n++;const row=$('#log').insertRow(1);
+  [n,new Date().toLocaleTimeString(),how,location.search].forEach(v=>row.insertCell().textContent=v);ins()}
+ const go=r=>{history.pushState({},'',url(r));show('click (pushState)')};
+ addEventListener('popstate',()=>show('back/forward'));
+ document.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>go(b.dataset.r));
+ $('#bk').onclick=()=>history.back();$('#fw').onclick=()=>history.forward();$('#rl').onclick=()=>location.reload();
+ $('#rapid').onclick=()=>{let i=0;const t=setInterval(()=>{go(RT[++i%3]);if(i>=5)clearInterval(t)},150)};
+ show('first load');setInterval(ins,1000);
+}
+</script></body></html>
